@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sample-job
+  namespace: default
+spec:
+  ttlSecondsAfterFinished: 100  # Auto-delete job 100 seconds after completion
+  backoffLimit: 3  # Number of retries before marking job as failed
+  template:
+    spec:
+      containers:
+      - name: job-container
+        image: busybox:latest
+        command: ["sh", "-c", "echo 'Job started'; sleep 10; echo 'Job completed successfully'"]
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+      restartPolicy: OnFailure  # Only restart if the container fails
